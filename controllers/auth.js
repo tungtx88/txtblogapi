@@ -20,7 +20,7 @@ exports.signup = (req, res) => {
         let username = shortId.generate()
         let profile = `${process.env.CLIENT_URL}/profile/${username}`
 
-        let newUser = new User({name, email, password, profile, username})
+        let newUser = new User({name, email, password, profile, username, role: 1})
         newUser.save((err, success) => {
             if(err) {
                 return res.status(400).json({
@@ -41,13 +41,13 @@ exports.signin = (req, res) => {
     User.findOne({email}).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
-                err: 'User with that email does not exist, Sign up please'
+                error: 'User with that email does not exist, Sign up please'
             })
         }
         // authenticating user information
         if (!user.authenticate(password)) {
             return res.status(400).json({
-                err: 'Wrong password'
+                error: 'Wrong password'
             })
         }
         // generate a token and send to the client
